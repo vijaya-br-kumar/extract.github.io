@@ -79,7 +79,7 @@
     </div>
     <div class="container-fluid">
         <div class="row">
-            <h1 class="text-center text-decoration-underline">Food Label Analyser</h1>
+            <h1 class="text-center text-decoration-underline">Food Label Analyser.</h1>
         </div>
         <div class="row">
             <div class="col-md-6 video-container">
@@ -159,7 +159,7 @@
         const defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs9gUXKwt2KErC_jWWlkZkGabxpeGchT-fyw&s";
         let facingMode = "environment"; // Start with rear camera
         const switchCameraButton = document.getElementById('switchCamera');
-        
+
         function startCamera() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
                 .then(stream => {
@@ -224,7 +224,27 @@
                     // Clear previous results
                     resultBody.innerHTML = "";
                     // Add new results to the table
-                    for (const [attribute, details] of Object.entries(analysisData)) {
+                    for (let [attribute, details] of Object.entries(analysisData)) {
+                        // if (attribute === "ingredients" || attribute === "allergens") {
+                        //     details = details.join(", ");
+                        // }
+                        if (attribute === "nutrition_values") {
+                            if (typeof details === "object") {
+                                let txt = "";
+                                for (const nutrients of details) {
+                                    for (const idx in nutrients) {
+                                        if (idx == 'nutrient') {
+                                            txt += nutrients[idx] + " "
+                                        } else {
+                                            txt += "(" + idx + ") " + nutrients[idx] + " "
+                                        }
+                                    }
+                                    txt += ", ";	
+                                }
+                                
+                                details = txt;
+                            } 
+                        }
                         addRow(attribute, details);
                     }   
                 } else {
@@ -257,3 +277,4 @@
     </script>
 </body>
 </html>
+
